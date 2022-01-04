@@ -1,0 +1,111 @@
+---
+title: "Grant Funding Details"
+author: "Dan Spakowicz"
+date: "12/1/2021"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readxl)
+```
+
+```{r}
+x <- readxl::read_xlsx("../data/grant-funding-details.xlsx")
+
+head(x)
+```
+
+```{r}
+NAfalse <- function(vector) {
+  vector <- if_else(is.na(vector),
+                    true = FALSE,
+                    false = vector)
+  return(vector)
+}
+
+
+df <- 
+  x %>%
+  mutate(date_submitted = gsub("^(\\d{4}-\\d{2}-\\d{2})_.*",
+                               "\\1",
+                               label),
+         date_submitted = as.Date(date_submitted, "%F")) %>%
+  mutate_at(vars(c("external", "NIH/NSF/DoD", "funded")), NAfalse) %>%
+  arrange(date_submitted) %>%
+  filter(date_submitted < as.Date(Sys.Date())) %>%
+  mutate(external_funded = if_else(external == TRUE &
+                                     funded == TRUE,
+                                   true = TRUE,
+                                   false = FALSE),
+         NIH_funded = if_else(`NIH/NSF/DoD` == TRUE &
+                                funded == TRUE,
+                              true = TRUE,
+                              false = FALSE)) %>%
+  mutate(total_submitted = seq(1, nrow(.)),
+         total_submitted_external = cumsum(external),
+         total_submitted_NIH = cumsum(`NIH/NSF/DoD`),
+         total_funded = cumsum(funded),
+         total_funded_external = cumsum(external_funded),
+         total_funded_NIH = cumsum(NIH_funded))
+
+head(df)
+```
+
+```{r}
+dfl <- 
+  df %>%
+  select(date_submitted, starts_with("total")) %>%
+  gather(key = "type",
+         value = "count",
+         -date_submitted)
+
+head(dfl)  
+```
+
+```{r}
+dfl %>%
+  ggplot(aes(x = date_submitted, y = count)) +
+  geom_line(aes(color = type), lwd = 1) +
+  theme_bw() +
+  # scale_color_brewer(palette = "Spectral") +
+  scale_color_viridis_d()
+```
+
+Per year summaries
+
+```{r}
+dfl2 <- 
+  df %>%
+  mutate(year = format(date_submitted, "%Y")) %>%
+  select(date_submitted, year, external, `NIH/NSF/DoD`, funded) %>%
+  mutate(all = TRUE) %>%
+  gather(-date_submitted, 
+         -year,
+         key = "type",
+         value = "logical") 
+
+head(dfl2)
+```
+
+```{r}
+dfl.summary <- 
+  dfl2 %>%
+  mutate(type = fct_relevel(type, 
+                            c("all", "external", "NIH/NSF/DoD", "funded"))) %>%
+  group_by(year, type) %>%
+  summarize(count = sum(logical))
+
+dfl.summary %>% 
+  ggplot(aes(x = type, y = count)) +
+  geom_bar(stat = "identity", 
+           aes(fill = year),
+           position = "dodge") +
+  theme_bw() +
+  scale_fill_viridis_d()
+```
+
