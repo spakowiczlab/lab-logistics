@@ -1,0 +1,160 @@
+---
+title: "grant-funding-periods"
+author: "Dan Spakowicz"
+date: "1/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+
+# source("00-paths.R")
+```
+
+```{r}
+x <- readxl::read_xlsx("../../../../../spak01/Box/osu/financials/Worktag-Funding Sheet/Worktag-Funding Sheet.xlsx", sheet = 2) 
+
+```
+
+```{r}
+x %>%
+  mutate(Grant = fct_reorder(Grant, start.date)) %>%
+  ggplot(aes(x = start.date, y = Grant)) +
+  geom_segment(aes(xend = end.date, 
+                   yend = Grant, 
+                   color = Grant), 
+               size = 8,
+               show.legend = FALSE) +
+  geom_vline(xintercept = as.POSIXct(Sys.Date()), 
+             linetype = "dotted",
+             color = "red") +
+  theme_bw() +
+  scale_colour_viridis_d() +
+  labs(x = "Date")
+
+ggsave("../figures/grants-funding-period.png",
+       height = 4, width = 6)
+```
+```{r}
+x %>%
+  mutate(Grant = fct_reorder(Grant, start.date)) %>%
+  ggplot(aes(x = start.date, y = Grant)) +
+  geom_segment(aes(xend = end.date, 
+                   yend = Grant, 
+                   color = PI), 
+               size = 8) +
+  geom_vline(xintercept = as.POSIXct(Sys.Date()), 
+             linetype = "dotted",
+             color = "red") +
+  theme_bw() +
+  scale_colour_brewer(palette = "Set1") +
+  labs(x = "Date")
+
+ggsave("../figures/grants-funding-period_PI.png",
+       height = 4, width = 6)
+```
+
+Show direct costs
+
+```{r}
+x %>%
+  mutate(Grant = fct_reorder(Grant, start.date)) %>%
+  ggplot(aes(x = start.date, y = Grant)) +
+  geom_segment(aes(xend = end.date, 
+                   yend = Grant, 
+                   color = Total.Direct), 
+               size = 8) +
+  geom_vline(xintercept = as.POSIXct(Sys.Date()), 
+             linetype = "dotted",
+             color = "red",
+             lwd = 1) +
+  theme_bw() +
+  scale_colour_viridis_c() +
+  labs(x = "Date")
+
+ggsave("../figures/grants-funding-period_direct-costs.png",
+       height = 4, width = 6)
+```
+
+
+```{r}
+x %>%
+  mutate(Grant = fct_reorder(Grant, start.date)) %>%
+  ggplot(aes(x = start.date, y = Grant)) +
+  geom_segment(aes(xend = end.date, 
+                   yend = Grant, 
+                   color = Total.Direct), 
+               size = 8) +
+  geom_vline(xintercept = as.POSIXct(Sys.Date()), 
+             linetype = "dotted",
+             color = "red",
+             lwd = 1) +
+  geom_vline(xintercept = as.POSIXct("2024-08-15"), 
+             linetype = "dotted",
+             color = "blue",
+             lwd = 1) +
+  theme_bw() +
+  scale_colour_viridis_c() +
+  labs(x = "Date")
+
+ggsave("../figures/grants-funding-period_direct-costs_R01-eligible.png",
+       height = 4, width = 6)
+```
+
+```{r}
+x %>%
+  mutate(Grant = fct_reorder(Grant, start.date)) %>%
+  ggplot(aes(x = start.date, y = Grant)) +
+  geom_segment(aes(xend = end.date, 
+                   yend = Grant, 
+                   color = Total.Direct), 
+               size = 8) +
+  geom_vline(xintercept = as.POSIXct(Sys.Date()), 
+             linetype = "dotted",
+             color = "red",
+             lwd = 1) +
+  geom_vline(xintercept = as.POSIXct("2024-08-15"), 
+             linetype = "dotted",
+             color = "blue",
+             lwd = 1) +
+  geom_vline(xintercept = as.POSIXct("2023-12-01"), 
+             linetype = "dashed",
+             color = "blue",
+             lwd = 1) +
+  theme_bw() +
+  scale_colour_viridis_c() +
+  labs(x = "Date")
+
+ggsave("../figures/grants-funding-period_direct-costs_R01-eligible_ESI.png",
+       height = 4, width = 6)
+```
+```{r}
+x %>%
+  mutate(Grant = fct_reorder(Grant, start.date)) %>%
+  ggplot(aes(x = start.date, y = Grant)) +
+  geom_segment(aes(xend = end.date, 
+                   yend = Grant, 
+                   color = Lab.Side), 
+               size = 8) +
+  geom_vline(xintercept = as.POSIXct(Sys.Date()), 
+             linetype = "dotted",
+             color = "red",
+             lwd = 1) +
+  geom_vline(xintercept = as.POSIXct("2024-08-15"), 
+             linetype = "dotted",
+             color = "blue",
+             lwd = 1) +
+  geom_vline(xintercept = as.POSIXct("2023-12-01"), 
+             linetype = "dashed",
+             color = "blue",
+             lwd = 1) +
+  theme_bw() +
+  scale_colour_viridis_d() +
+  labs(x = "Date")
+
+ggsave("../figures/grants-funding-period_lab-side.png",
+       height = 4, width = 6)
+```
+

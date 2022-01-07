@@ -1,5 +1,5 @@
 ---
-title: "Grant Funding Details"
+title: "Grant Application Details"
 author: "Dan Spakowicz"
 date: "12/1/2021"
 output: 
@@ -73,7 +73,9 @@ dfl %>%
   geom_line(aes(color = type), lwd = 1) +
   theme_bw() +
   # scale_color_brewer(palette = "Spectral") +
-  scale_color_viridis_d()
+  scale_color_viridis_d() 
+ggsave("../figures/total_grants-submitted.png",
+       height = 4, width = 6)
 ```
 
 Per year summaries
@@ -107,5 +109,7 @@ dfl.summary %>%
            position = "dodge") +
   theme_bw() +
   scale_fill_viridis_d()
+ggsave("../figures/grants-per-year.png",
+       height = 4, width = 6)
 ```
 
