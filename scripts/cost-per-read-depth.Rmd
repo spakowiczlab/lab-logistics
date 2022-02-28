@@ -1,0 +1,34 @@
+---
+title: "Untitled"
+author: "Dan Spakowicz"
+date: "2/2/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+```{r}
+a <- data.frame(reads = c(25, 100),
+                cost = c(130, 420))
+a
+```
+
+```{r}
+a %>%
+  ggplot(aes(x = reads, y = cost)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+```
+
+
+```{r}
+lm0 <- lm(cost ~ reads, data = a)
+
+new <- data.frame(reads = c(50))
+
+predict(lm0, newdata = new)
+```
