@@ -1,0 +1,65 @@
+---
+title: "pelotonia-URF_training-table"
+author: "Dan Spakowicz"
+date: "2/28/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readxl)
+library(tidyverse)
+library(gtable)
+
+source("00-paths.R")
+```
+
+```{r}
+x <- readxl::read_xlsx(file.path(paths$box.personnel,
+                                 "mentee-list.xlsx"),
+                       na = "NA")
+```
+
+The goal of this document is to create a training experince table for a Pelotonia Undergraduate Research Fellowship application. It should look like this:
+
+![training table screenshot]("../data/training-table-template.png")
+
+
+```{r}
+y <- 
+  x %>%
+  mutate(curr.train = if_else(`Currently in training (in the lab)` == "Yes",
+                              true = TRUE,
+                              false = FALSE),
+         tge = if_else(`Training grant eligible` == "Yes",
+                              true = TRUE,
+                              false = FALSE),
+         cont.res = if_else(`Continued in Research or Related Careers` == "Yes",
+                              true = TRUE,
+                              false = FALSE)) %>%
+  rename("role.cat" = `Role category for the undergraduate research fellowship (when they were in the lab) [post-doctorate, pre-doctorate, undergraduate]`) %>%
+  select(name, role.cat, curr.train, tge, cont.res) %>%
+  mutate(curr.train.tge = if_else(curr.train == TRUE & tge == TRUE,
+                                  true = TRUE,
+                                  false = FALSE))
+  
+
+head(y)
+```
+
+```{r}
+table <- 
+  y %>%
+  group_by(role.cat) %>%
+  summarize("Currently in Training" = sum(curr.train, na.rm = TRUE),
+            "Currently in Training and TGE" = sum(curr.train.tge, na.rm = TRUE),
+            "Completed Training (past 10 years)" = length(name) - 
+              sum(curr.train, na.rm = TRUE),
+            "Completed Traing & Continued in Research" = sum(cont.res, na.rm = TRUE))
+```
+
+```{r}
+kableExtra::kable(table)
+```
+
