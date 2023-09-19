@@ -1,5 +1,5 @@
 ---
-title: "pelotonia-URF_training-table"
+title: "Personnel Summaries"
 author: "Dan Spakowicz"
 date: "2/28/2022"
 output: html_document
@@ -14,17 +14,22 @@ library(gtable)
 
 source("00-paths.R")
 ```
+# Introduction 
+
+The goal of this document is to summarize Spakowicz lab personnel and training data.
+
+Read in the spreadsheet where personnel data are maintained.
 
 ```{r}
-x <- readxl::read_xlsx(file.path(paths$box.personnel,
+x <- readxl::read_xlsx(file.path(paths$onedrive,
                                  "mentee-list.xlsx"),
                        na = "NA")
 ```
 
-The goal of this document is to create a training experince table for a Pelotonia Undergraduate Research Fellowship application. It should look like this:
+# Pelotonia Undergraduate Research Fellowship application
+## Training experince table
 
 ![training table screenshot]("../data/training-table-template.png")
-
 
 ```{r}
 y <- 
@@ -62,4 +67,14 @@ table <-
 ```{r}
 kableExtra::kable(table)
 ```
+
+# T32 biosketch summaries
+
+```{r}
+table(x$position.structured)
+```
+```{r}
+table(x$fellowship.1)
+```
+
 
