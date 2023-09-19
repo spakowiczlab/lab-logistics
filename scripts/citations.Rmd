@@ -1,0 +1,60 @@
+---
+title: "citations"
+author: "Dan Spakowicz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+```{r}
+x <- read.csv("../data/2023-09-18_citations.csv") %>%
+  filter(grepl("Spakowicz", Author)) %>%
+  select(Item.Type, Publication.Year, Title, Publication.Title) %>%
+  distinct()
+```
+
+```{r}
+mod <- 
+  x %>%
+  mutate(DS_item.type = if_else(Item.Type == "journalArticle",
+                                true = "journalArticle",
+                                false = "abstract")) %>%
+  mutate(DS_item.type = if_else(grepl("^EP08|^PP|^78|^CGE|^Abstract", 
+                                      Title),
+                                true = "abstract",
+                                false = DS_item.type)) %>%
+  mutate(DS_item.type = if_else(grepl("^$", Publication.Title),
+                                true = "abstract",
+                                false = DS_item.type)) %>%
+  mutate(DS_item.type = if_else(grepl("The gut microbiome correlates with common geriatric|A Geriatric Assessment", 
+                                      Title),
+                                true = "abstract",
+                                false = DS_item.type)) %>%
+  select(-Item.Type) %>%
+  rename("item.type" = "DS_item.type") %>%
+  arrange(-Publication.Year)
+```
+
+```{r}
+mod %>%
+  ggplot(aes(x = Publication.Year)) +
+  geom_bar(stat = "count", aes(fill = item.type)) +
+  theme_bw() +
+  scale_fill_brewer(palette = "Set1") +
+  labs(x = "Year",
+       fill = "Item Type")
+
+ggsave("../figures/Presley-Spakowicz_publications.png",
+       height = 3, width = 4)
+```
+
+```{r}
+write.csv(mod, "../data/Presley-Spakowicz_publications.csv",
+          row.names = FALSE)
+```
+
