@@ -1,4 +1,6 @@
 library(stringr)
+
+
 randomizeNames <- function(x) {
   y <- unlist(str_split(x, ","))
   z <- sample(y, size = length(y), replace = FALSE)
@@ -6,5 +8,3 @@ randomizeNames <- function(x) {
   return(z)
 }
 
-paste_here <- ""
-randomizeNames(paste_here)

@@ -1,0 +1,136 @@
+---
+title: "clean-and-number-folders"
+author: "Dan Spakowicz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(pillar.print_max = 50, pillar.print_min = 50)
+
+library(tidyverse)
+```
+
+
+
+```{r}
+x <- 
+"da---l         6/22/2022   9:49 PM                2022-07-01_NJ_GI-ESMO_exogieo
+da---l          7/8/2022   9:36 PM                2022-07-10_DS_ACC_dmm21
+da---l         7/22/2022   4:21 PM                2022-07-19_NA_CREATES-HS_mimic
+da---l         5/13/2022   8:45 AM                2022-08-06_CP_WCLC_exoa
+da---l          9/7/2022   2:47 PM                2022-08-06_DO_WCLC_atezotem
+da---l         7/31/2022   9:34 PM                2022-08-06_DS_WCLC_modbio
+da---l          9/7/2022   2:43 PM                2022-08-06_MB_WCLC_bewell
+da---l          9/7/2022   2:46 PM                2022-08-06_ML_WCLC_bmi-io
+da---l         5/13/2022   8:44 AM                2022-09-22_ML_ESMO22_bmiio
+da---l         5/20/2022  12:13 PM                2022-10-01_BC_MDSR_dmm21
+da---l         7/28/2022   5:33 PM                2022-10-14_BC_OSUCCC-ASM_dmm21
+da---l        10/22/2022  10:05 PM                2022-10-14_DS_OSUCCC-ASM_modbio
+da---l         9/22/2022   1:06 PM                2022-10-14_JK_OSUCCC-ASM_georgia-micro
+da---l         9/14/2022   9:41 AM                2022-10-14_LF_OSUCCC-ASM_georgia-pros
+da---l         10/7/2022  12:39 PM                2022-10-14_NW_OSUCCC-ASM_mitox
+da---l         5/13/2022   8:44 AM                2022-10-23_AQ_ASTRO_georgia
+da---l         9/28/2022   3:52 PM                2022-10-23_SJ_ASTRO_exohnsc
+da---l          9/6/2022   2:49 PM                2022-10-31_MB_AICR_bewell
+da---l        11/22/2022   5:07 PM                2022-11-04_DS_RBM_dmm21-modbio
+da---l         9/27/2022  10:32 AM                2022-11-04_RH_RBM_exorien-recrad
+da---l         11/9/2022   1:45 PM                2022-11-08_CW_SITC_exomelio
+da---l        10/20/2022   9:11 AM                2022-11-08_DO_SITC_a2bar
+da---l         7/27/2022  12:17 AM                2022-11-08_EG_SITC_irae-disc
+da---l         1/24/2023   1:45 PM                2022-11-14_AP_PIIO_dmm21
+da---l        10/24/2022  11:50 AM                2022-11-14_BC_PIIO_bewell
+da---l        10/24/2022  11:50 AM                2022-11-14_NW_PIIO_mitox
+da---l         9/27/2022   2:48 PM                2022-11-17_DS_AACR-A&C_modbio
+da---l         2/13/2023   9:12 PM                2023-02-14_DS_CCC_orien
+da---l         2/16/2023   7:12 PM                2023-02-28_CS_AHA_nutricare
+da---l          3/6/2023  11:59 AM                2023-02-28_DS_ODSi_exorien-all
+da---l          3/6/2023   2:48 PM                2023-03-02_DS_ORIEN_exotic
+da---l         12/7/2022   4:25 PM                2023-03-03_AT_ORIEN_exorien-melio
+da---l         4/13/2023   3:22 PM                2023-03-03_DS_ORIEN_exorien-all
+da---l         12/6/2022   3:56 PM                2023-03-03_SM_ORIEN_obesity
+da---l         5/28/2023  11:38 PM                2023-04-13_DG_DOIM-TRD_exogieo
+da---l        11/15/2022   2:28 PM                2023-04-14_AP_AACR_dmm21
+da---l          4/5/2023   4:49 PM                2023-04-14_CW_AACR_exorien-melio
+da---l          5/3/2023   9:13 AM                2023-04-14_DS_AACR_exorien
+da---l        11/11/2022  12:13 AM                2023-04-14_MB_AACR_mitoscore
+da---l         3/27/2023   4:08 PM                2023-05-02_DS_OSC-SUG_exorien
+da---l         4/11/2023  12:20 PM                2023-05-09_CW_MMS_exorien-melio
+da---l         2/20/2023   9:20 PM                2023-06-04_AH_ASCO_exosarc
+da---l         2/13/2023   2:27 PM                2023-06-04_BC_ASCO_mimic
+da---l          2/8/2023   1:08 PM                2023-06-04_DO_ASCO_atezotem
+da---l         2/12/2023  12:28 AM                2023-06-04_JK_ASCO_stk11
+da---l          2/8/2023  12:54 PM                2023-06-04_KH_ASCO_eosino-nsclc-io
+da---l         2/16/2023  11:20 PM                2023-06-04_KW_ASCO_eo-crc
+da---l          2/8/2023   1:23 PM                2023-06-04_MG_ASCO_mhealth-iit
+da---l          2/9/2023  11:07 PM                2023-06-04_ML_ASCO_weight
+da---l         6/16/2023  12:44 PM                2023-06-04_NW_ASCO_mitox
+da---l         4/24/2023   1:27 PM                2023-06-09_CW_OSUCCC_TTPR_exorien-melio
+da---l         6/28/2023  12:31 PM                2023-07-28_JG_CREATES_nutricare
+da---l          2/9/2023   9:51 PM                2023-10-01_RU_ASTRO_hnsc-hpv"
+
+```
+
+
+```{r, rows.print = 45}
+printFolderNames <- function(clip) {
+  clip %>%
+    str_split("\n") %>%
+    str_split("  +") %>%
+    unlist %>%
+    as.data.frame() %>%
+    filter(grepl("^202", .))  %>%
+    rename("raw" = ".") %>%
+    mutate(conf = gsub('", "da---l', "", raw)) %>%
+    mutate(conf = gsub('", \n"da---l', "", conf)) %>%
+    mutate(conf = gsub('")', "", conf)) %>%
+    select(conf)
+}
+
+printFolderNames(x)
+```
+
+```{r, rows.print = 45}
+grants2023 <- 
+"da---l         6/24/2022  12:25 AM                2022-07-07_EA_ONS_georgiaB
+da---l         7/19/2022   4:26 PM                2022-07-14_TW_NCI-U54_smoking
+da---l         7/20/2022  10:52 PM                2022-07-20_WH_NIDDK_atneusig
+da---l         8/24/2022  11:10 AM                2022-08-29_CP_pelotonia_roar-surg
+da---l          3/6/2023   3:28 PM                2022-09-03_CP-AA_NCCN_adiio
+da---l          9/7/2022  12:43 AM                2022-09-25_ND_NCI-P01_recrad
+da---l         3/21/2023   1:10 PM                2022-10-15_DS_ACS-RSG_modmicro
+da---l         9/21/2022   3:46 PM                2022-10-16_ACT_NCI-R01_iosig
+da---l        11/21/2022   4:49 PM                2022-12-02_AP_AACR_dmm21
+da---l        12/15/2022  10:33 PM                2022-12-15_DS_ALA_exorien
+da---l         12/5/2022   1:36 PM                2022-12-17_DM_NIDCR-U01_dental-edu
+da---l         12/8/2022   9:14 AM                2022-12-20_QM_NSF_deep-micro
+da---l         1/16/2023   9:40 AM                2022-12-22_DG_AOA-HMS_recrad
+da---l         1/26/2023   5:12 PM                2023-01-04_CH_HNSA_crc-surv
+da---l         1/30/2023   9:30 AM                2023-01-09_JJ_OSU-Catalyst_coms
+da---l         1/26/2023   1:50 PM                2023-01-15_LC_KL2_micro-chemo
+da---l          1/8/2023   8:36 PM                2023-01-16_DG_MDSR_recrad
+da---l         1/18/2023  11:30 PM                2023-02-06_NS_NCI-R21_antmim
+da---l         1/18/2023   2:41 PM                2023-02-06_PS_NCI-T32_prevention
+da---l          3/8/2023   2:21 PM                2023-02-07_WH_NIDDK-R01_atbac
+da---l         2/15/2023   5:04 PM                2023-02-15_AL_Pelotonia-URF_recrad
+da---l         2/15/2023   4:57 PM                2023-02-15_LN_Pelotonia-URF_dmm
+da---l         2/26/2023  10:53 PM                2023-02-15_LN_URAP-dmm
+da---l          3/6/2023   2:48 PM                2023-02-28_AL_URAP_recrad
+da---l          2/6/2023   3:24 PM                2023-03-06_DS_NCI-R21-A1_madeno
+da---l          3/6/2023   4:23 PM                2023-03-06_WH_NIDDK-R01_attreg
+da---l          4/3/2023  10:17 PM                2023-04-03_DS_ACS-RSG-A1_modmicro
+da---l         6/25/2023   5:03 PM                2023-04-21_DS_ButlerWilliams_modbio
+da---l         4/13/2023  11:37 AM                2023-04-27_DS_VFound_madeno
+da---l          5/5/2023  10:48 PM                2023-05-08_DG_nanostring_recrad
+da---l         4/25/2023   3:57 PM                2023-05-15_DS_ORIEN-NOVA_exorien
+da---l         5/22/2023  10:32 PM                2023-06-04_JS_NCI-R01_tummicro
+da---l          6/8/2023  10:16 PM                2023-06-05_DS_NCI-R01_exORIEN
+da---l         5/24/2023  12:47 AM                2023-06-07_LC_OCRA-ECIG_mov
+da---l          6/6/2023  11:19 PM                2023-06-15_LC_AACR-VS-Pelotonia_ovpro
+da---l         6/15/2023   6:40 AM                2023-06-15_ND_NCI-R01-supp_canine
+da---l          6/9/2023  10:10 AM                2023-06-26_DS_HESI_adeno"
+
+printFolderNames(grants2023)
+```
+

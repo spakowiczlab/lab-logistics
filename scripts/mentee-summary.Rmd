@@ -1,0 +1,25 @@
+---
+title: "mentee summary"
+author: "Dan Spakowicz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readxl)
+
+# Custom file paths for this computer, pointing to the shared OneDrive folder "personnel"
+source("00-paths.R")
+```
+
+```{r}
+x <- readxl::read_xlsx(file.path(paths$OneDrive, "mentee-list.xlsx"))
+```
+
+```{r}
+table(x$position.structured)
+```
+

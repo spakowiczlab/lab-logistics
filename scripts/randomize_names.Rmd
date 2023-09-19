@@ -1,0 +1,19 @@
+---
+title: "randomize names"
+author: "Dan Spakowicz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source("randomizeNames.R")
+```
+
+```{r}
+paste_here <- "AP, AB, CMB, JG, LN, RH, SJ, YM, DS, CW, AL"
+
+randomizeNames(paste_here)
+```
+
