@@ -14,6 +14,7 @@ library(gtable)
 
 source("00-paths.R")
 ```
+
 # Introduction 
 
 The goal of this document is to summarize Spakowicz lab personnel and training data.
