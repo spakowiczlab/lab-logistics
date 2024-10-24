@@ -1,0 +1,55 @@
+---
+title: "ORIEN24 Microbiome RIG Presentation"
+author: "Dan Spakowicz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+```{r}
+mic <- read.table("../data/microbiome-papers/microbiome.txt", 
+                  fill = TRUE,
+                  skip = 1, 
+                  col.names = c("year", "count", "fraction")) %>%
+   mutate_all(as.numeric) %>%
+  mutate(search = "microbiome")
+   
+
+
+mic.tumor <- read.table("../data/microbiome-papers/microbiomeANDtumor.txt", 
+                  fill = TRUE,
+                  skip = 1, 
+                  col.names = c("year", "count", "fraction")) %>%
+  mutate_all(as.numeric) %>%
+  drop_na(count) %>% 
+  mutate(search = "microbiome AND tumor")
+```
+```{r}
+all <- bind_rows(mic, mic.tumor)
+  
+```
+
+```{r}
+all %>%
+  filter(year < 2024) %>%
+  ggplot(aes(x = year, y = count)) +
+  geom_line(aes(group = search, 
+                color = search),
+            lwd = 2) +
+  geom_point(aes(color = search),
+             size = 4) +
+  theme_bw(base_size = 18) +
+  scale_color_brewer(palette = "Set1") +
+  labs(x = "Year",
+       y = "Number of Papers")
+
+ggsave("../figures/tumor-microbiome-papers.png",
+       height = 5,
+       width = 11)
+```
+
