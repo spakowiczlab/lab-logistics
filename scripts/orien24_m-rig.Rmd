@@ -46,7 +46,7 @@ all %>%
   theme_bw(base_size = 18) +
   scale_color_brewer(palette = "Set1") +
   labs(x = "Year",
-       y = "Number of Papers")
+       y = "Number of Papers per Year")
 
 ggsave("../figures/tumor-microbiome-papers.png",
        height = 5,
