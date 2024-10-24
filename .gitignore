@@ -42,3 +42,7 @@ vignettes/*.pdf
 # User-specific path information
 lab-logistics.json
 scripts/00-paths.R
+
+# User-specific path information
+lab-logistics.json
+scripts/00-paths.R
