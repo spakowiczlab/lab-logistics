@@ -37,9 +37,8 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.DS_Store
 
 # User-specific path information
 lab-logistics.json
 scripts/00-paths.R
-scripts/00-paths.R
-lab-logistics.json
