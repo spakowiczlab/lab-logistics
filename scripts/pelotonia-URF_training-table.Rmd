@@ -27,6 +27,7 @@ x <- readxl::read_xlsx(file.path(paths$onedrive,
                        na = "NA")
 
 x <-  readxl::read_xlsx("/Users/spak01/OneDrive - The Ohio State University Wexner Medical Center/BuckeyeBox Data/osu/personnel/mentee-list.xlsx")
+x <-  readxl::read_xlsx("~/OneDrive - The Ohio State University Wexner Medical Center/BuckeyeBox Data/osu/personnel/mentee-list.xlsx")
 ```
 
 # Pelotonia Undergraduate Research Fellowship application
